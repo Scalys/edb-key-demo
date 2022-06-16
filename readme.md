@@ -99,3 +99,11 @@ To run in a streamed video mode from camera /dev/video0 skip the argument:
 Successfull execution will produce a continuous stream of label names classified from the camera.
 
 For more details see `./edb_key_demo --help`.
+
+# Cloud management
+
+For a one-button Azure cloud infrastructure deployment see this [page](https://github.com/JimPaine/Project_Confidential_Apps_for_IoT_with_Enclaves/blob/main/docs/azure-environment-setup.md).
+
+# Confidential Package Management
+
+For information on installing and using Confidential Packages see this [page](https://github.com/Scalys/ConfidentialPackageTools).
