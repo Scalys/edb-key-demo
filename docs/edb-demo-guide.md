@@ -96,15 +96,15 @@ $ ./docker/run-20.04.sh
 To build the EDB demo trusted application:
 
 1. source the build environment
-```
-source ~/poky_sdk/environment-setup-aarch64-poky-linux
-```
+    ```
+    source ~/poky_sdk/environment-setup-aarch64-poky-linux
+    ```
 1. build the application
-```
-$ mkdir build && cd build
-$ cmake ../edb-key-demo -DPKG_CONFIG_SYSROOT_DIR="${PKG_CONFIG_SYSROOT_DIR}" -DOE_TEE=OP-TEE -DOE_PACKAGE_OPTEE_PLATFORM=trustsom -DOE_OPTEE_PLATFORM=trustsom -DCMAKE_TOOLCHAIN_FILE=../edb-key-demo/cmake/arm-cross.cmake -DCMAKE_BUILD_TYPE=Release -DOE_PACKAGE_PREFIX=${PKG_CONFIG_SYSROOT_DIR}/opt/oe
-$ make
-```
+    ```
+    $ mkdir build && cd build
+    $ cmake ../edb-key-demo -DPKG_CONFIG_SYSROOT_DIR="${PKG_CONFIG_SYSROOT_DIR}" -DOE_TEE=OP-TEE -DOE_PACKAGE_OPTEE_PLATFORM=trustsom -DOE_OPTEE_PLATFORM=trustsom -DCMAKE_TOOLCHAIN_FILE=../edb-key-demo/cmake/arm-cross.cmake -DCMAKE_BUILD_TYPE=Release -DOE_PACKAGE_PREFIX=${PKG_CONFIG_SYSROOT_DIR}/opt/oe
+    $ make
+    ```
 1. build results (`edb_key_demo` and `1f574668-6c89-41b5-b313-4b2d85d63c9d.ta`) are located in `out/bin` directory.
 
 ### Confidential Package assembly
