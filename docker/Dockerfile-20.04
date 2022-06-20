@@ -16,7 +16,10 @@ RUN apt-get update && \
     tar \
     libatlas-base-dev \
     cmake \
-    python3-pip
+    bison \
+    flex \
+    python3-pip \
+    bc
 
 # Set up user
 ARG USER
@@ -35,16 +38,19 @@ RUN pip install pillow
 # VSCode extension build dependencies
 COPY files/scripts /tmp/openenclave-scripts
 RUN apt-get update && \
+    curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
+RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    npm
-RUN npm install -g vsce
+    nodejs
+RUN npm install -g --unsafe-perm vsce
 RUN npm install -g --unsafe-perm esy
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ocaml-native-compilers \
     gawk \
-    vim
+    vim \
+    llvm
 
 # Set up prompt
 RUN echo 'export PS1="\h:\W# "' | tee -a "/root/.bashrc" > /dev/null
@@ -68,3 +74,17 @@ RUN pip install pycryptodome
 RUN pip3 install pycryptodome
 
 USER "${USER}"
+
+# Install toolchain
+RUN cd && \
+    echo "Downloading toolchain..." && \
+    wget -q http://trustbox.scalys.com/pub/openenclave/poky-glibc-x86_64-scalys-openenclave-image-aarch64-trustsom-toolchain-ext-3.1.10.sh -O toolchain.sh
+RUN cd && chmod +x toolchain.sh && \
+    ./toolchain.sh -y && \
+    rm -f toolchain.sh
+
+# Install rutstup
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -q -y
+RUN /home/haff/.cargo/bin/rustup target add aarch64-unknown-linux-gnu
+RUN sudo cp -a /etc/ssl /home/haff/poky_sdk/buildtools/sysroots/x86_64-pokysdk-linux/etc/
+
