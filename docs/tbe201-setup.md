@@ -37,7 +37,7 @@ The minimal flow of the default image runs the ML demo inside of enclave only. T
 
 # Firmware update
 
-1. download the http://trustbox.scalys.com/pub/openenclave/trustbox-201-armbian-2111-edb-2022.06.20.img]  binary image, unpack it and flash it to the SD card using "dd" utility in Linux:
+1. download the [sdcard image](http://trustbox.scalys.com/pub/openenclave/trustbox-201-armbian-2111-edb-2022.06.20.img)  binary image, unpack it and flash it to the SD card using "dd" utility in Linux:
 ```
 $ sudo dd if=trustbox-201-armbian-2111-edb-2022.06.20.img of=/dev/sdX
 ```
