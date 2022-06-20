@@ -12,10 +12,12 @@
 #include <sys/time.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+#include <stdlib.h>
 #include <signal.h>
 #include <linux/videodev2.h>
 
 #include "capture.h"
+#include "common.h"
 #include "host.h"
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -23,8 +25,6 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
 
-int g_capture_frames = 0;
-const char *g_capture_path;
 const char default_capt_path[] = "edb-key-demo-%03lu.png";
 
 const size_t frame_width  = 176;
@@ -69,13 +69,12 @@ static int xioctl(int fh, int request, void *arg)
 	return r;
 }
 
-static void capture_frame_png(uint8_t *img_rgb)
+static void capture_frame_png(uint8_t *img_rgb, const char *capt_path)
 {
-	static size_t idx = 0;
+    static size_t idx = 0;
 
-	char path_png[255];
-	sprintf(path_png, "edb-key-demo-%03lu.png", idx++);
-	fprintf(stderr, "%s: ", path_png);
+    char path_png[255];
+    sprintf(path_png, capt_path, idx++);
 
     stbi_write_png(path_png, frame_width, frame_height, 3, img_rgb, 0);
 }
@@ -135,7 +134,7 @@ static void image_rgb_to_yuyv422(uint8_t *img_rgb, uint8_t *img_yuyv422)
 	}
 }
 
-static void process_frame(uint8_t *img_yuyv422, size_t bytesused)
+static void process_frame(uint8_t *img_yuyv422, size_t bytesused, const char *capt_path)
 {
 	const size_t size_yuyv422 = frame_width * frame_height * 2;
 	const size_t size_rgb     = frame_width * frame_height * 3;
@@ -146,8 +145,8 @@ static void process_frame(uint8_t *img_yuyv422, size_t bytesused)
 
 	image_yuyv422_to_rgb(img_yuyv422, img_rgb);
 
-	if (g_capture_frames)
-		capture_frame_png(img_rgb);
+	if (capt_path)
+		capture_frame_png(img_rgb, capt_path);
 
     result = call_enclave(img_rgb);
     if (result != 0) {
@@ -156,9 +155,24 @@ static void process_frame(uint8_t *img_yuyv422, size_t bytesused)
         terminate_enclave();
 		exit(1);
     }
+
+    switch (g_logo) {
+    case LOGO_R:
+        system("/root/edb_key_demo/web/set.sh red");
+        break;
+    case LOGO_B:
+        system("/root/edb_key_demo/web/set.sh black");
+        break;
+    case LOGO_Y:
+        system("/root/edb_key_demo/web/set.sh yellow");
+        break;
+    default:
+        system("/root/edb_key_demo/web/set.sh none");
+        break;
+    }
 }
 
-static int read_frame(int fd)
+static int read_frame(int fd, const char *capt_path)
 {
 	struct v4l2_buffer buf;
 
@@ -179,14 +193,14 @@ static int read_frame(int fd)
 	}
 	assert(buf.index < n_buffers);
 
-	process_frame((uint8_t*)buffers[buf.index].start, buf.bytesused);
+	process_frame((uint8_t*)buffers[buf.index].start, buf.bytesused, capt_path);
 	if (-1 == xioctl(fd, VIDIOC_QBUF, &buf))
 		errno_exit("VIDIOC_QBUF");
 
 	return 1;
 }
 
-static void mainloop(int fd)
+static void mainloop(int fd, const char *capt_path)
 {
 	while (keep_running) {
 		for (;;) {
@@ -214,7 +228,7 @@ static void mainloop(int fd)
 				exit(EXIT_FAILURE);
 			}
 
-			if (read_frame(fd))
+			if (read_frame(fd, capt_path))
 				break;
 			/* EAGAIN - continue select loop. */
 		}
@@ -441,7 +455,7 @@ static int open_device(const char *dev_name)
 	return fd;
 }
 
-int capture_loop(const char *dev_name)
+int capture_loop(const char *dev_name, const char *capt_path)
 {
 	int fd;
 
@@ -451,7 +465,7 @@ int capture_loop(const char *dev_name)
 	fd = open_device(dev_name);
 	init_device(fd, dev_name);
 	start_capturing(fd);
-	mainloop(fd);
+	mainloop(fd, capt_path);
 	stop_capturing(fd);
 	uninit_device(fd);
 	close_device(fd);

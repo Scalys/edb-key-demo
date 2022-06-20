@@ -35,7 +35,8 @@ stream.\n\
 Options:\n\
   -h, --help              show help\n\
   -d, --device=DEVICE     set camera device. Default is %s\n\
-  -c, --capture           capture processed frames and store them in currend directory\n\
+  -c, --capture=PATH      capture processed frames and store them in currend directory\n\
+                          Expects a printf-formatted name for a captured file\n\
 ", FRAME_WIDTH, FRAME_HEIGHT, default_cam_dev);
 }
 
@@ -108,7 +109,7 @@ int main(int argc, char *argv[])
     const char *cam_dev = default_cam_dev;
     const char *img_path = 0;
     const char *ta_name = 0;
-    char *capt_path = 0;
+    const char *capt_path = 0;
     int c;
 
     while (1) {
@@ -140,7 +141,6 @@ int main(int argc, char *argv[])
             usage();
             exit(0);
         case 'c':
-            g_capture_frames = true;
             capt_path = optarg;
             break;
         case 'd':
@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
     if (img_path) {
         process_image(img_path);
     } else {
-        capture_loop(cam_dev);
+        capture_loop(cam_dev, capt_path);
     }
 
     uninit();

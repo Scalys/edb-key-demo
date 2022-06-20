@@ -64,6 +64,7 @@ int ecall_nn(uint8_t *img, size_t size, size_t w, size_t h, size_t n)
                                   "to supported version %d",
                                   tf.model->version(), TFLITE_SCHEMA_VERSION);
     }
+
     tf.interpreter = new tflite::MicroInterpreter(tf.model, tf.resolver, tensor_arena, tensor_arena_len, tf.error_reporter);
 
     dbg("allocating tensor arena of size %d", tensor_arena);

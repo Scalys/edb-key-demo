@@ -12,6 +12,7 @@
 int g_enclave_debug = 0;
 int g_enclave_simulate = 0;
 static oe_enclave_t *g_enclave = NULL;
+int g_logo = LOGO_U;
 
 bool check_simulate_opt(int *argc, char *argv[])
 {
@@ -50,12 +51,14 @@ int ocall_log(char *msg)
 
 int ocall_class_result(int logo, double certainty)
 {
+    g_logo = logo;
+
     switch (logo) {
-    case LOGO_R : printf(":key-doom-red:\n");    break;
-    case LOGO_B : printf(":key-doom-blue:\n");   break;
-    case LOGO_Y : printf(":key-doom-yellow:\n"); break;
-    case LOGO_U : printf(":key-none:\n");     break;
-    default :     printf(":key-none:\n");     break;
+    case LOGO_R : printf(":key-red:    %lf\n", certainty); break;
+    case LOGO_B : printf(":key-black:  %lf\n", certainty); break;
+    case LOGO_Y : printf(":key-yellow: %lf\n", certainty); break;
+    case LOGO_U : printf(":key-none:   %lf\n", certainty); break;
+    default :     printf(":key-none:   %lf\n", certainty); break;
     }
 
     return 0;
@@ -94,7 +97,7 @@ int call_enclave(uint8_t *img)
             oe_result_str(result));
         return result;
     } else if (hostResult != 0) {
-        fprintf(stderr, "ecall_fibonacci failed: result=%u\n", hostResult);
+        fprintf(stderr, "ecall failed: result=%u\n", hostResult);
         return result;
     }
 

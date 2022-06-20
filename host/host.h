@@ -9,6 +9,7 @@
 
 extern int g_enclave_debug;
 extern int g_enclave_simulate;
+extern int g_logo;
 
 int create_enclave(const char *ta_name);
 int terminate_enclave();
