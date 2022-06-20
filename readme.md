@@ -107,3 +107,10 @@ For a one-button Azure cloud infrastructure deployment see this [page](https://g
 # Confidential Package Management
 
 For information on installing and using Confidential Packages see this [page](https://github.com/Scalys/ConfidentialPackageTools).
+
+
+# Enclave Device Blueprint reference implementation
+
+For instructions on preparing the TrustBox Edge 201 for a demo refer to the [setup guide](https://github.com/Scalys/edb-key-demo/docs/tbe201-setup.md)
+
+For a full end-to-end Enclave Device Blueprint description, refer to the [EDB demo guide](https://github.com/Scalys/edb-key-demo/docs/edb-demo-guide.md).
