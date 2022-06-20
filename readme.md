@@ -111,6 +111,6 @@ For information on installing and using Confidential Packages see this [page](ht
 
 # Enclave Device Blueprint reference implementation
 
-For instructions on preparing the TrustBox Edge 201 for a demo refer to the [setup guide](https://github.com/Scalys/edb-key-demo/docs/tbe201-setup.md)
+For instructions on preparing the TrustBox Edge 201 for a demo refer to the [setup guide](https://github.com/Scalys/edb-key-demo/blob/main/docs/tbe201-setup.md)
 
-For a full end-to-end Enclave Device Blueprint description, refer to the [EDB demo guide](https://github.com/Scalys/edb-key-demo/docs/edb-demo-guide.md).
+For a full end-to-end Enclave Device Blueprint description, refer to the [EDB demo guide](https://github.com/Scalys/edb-key-demo/blob/main/docs/edb-demo-guide.md)

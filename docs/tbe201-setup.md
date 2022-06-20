@@ -47,4 +47,4 @@ where /dev/sdX is the actual SD card device. Or in Windows using tool like [Etch
 
 # Demo
 
-
+For an explanation of a end-to-end Enclave Device Blueprint reference implementation see the [EDB demo guide](https://github.com/Scalys/edb-key-demo/blob/main/docs/edb-demo-guide.md)
